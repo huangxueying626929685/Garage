@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"    content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
+
+    <title>修改资料 - 聚力立停</title>
+
+    <link rel="shortcut icon" href="assets/images/gt_favicon.png">
+    <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+    <!-- Custom styles for our template -->
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="css/style1.css" media="screen" type="text/css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400' rel='stylesheet' type='text/css'>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="./js/jquery-1.9.1.min.js"></script>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<!-- Fixed navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+    <div class="container">
+        <div class="navbar-header">
+            <!-- Button for smallest screens -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            <a class="navbar-brand" href="newindex.html">聚力立停</a>
+            <!--<a class="navbar-brand" href="newindex.html"><img src="assets/images/logo.png" alt="Progressus HTML5 template"></a>-->
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav pull-right">
+                <li><a href="newindex.html">主页</a></li>
+                <li class="active"><a class="btn" id="username"></a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
+
+<!-- /.navbar -->
+
+<div style="position: absolute;z-index:10;left: 0;top:100px;width: 100px;height: 218px;background-color: rgba(0,0,0,.5);">
+    <!--<li class="level-one" id="selected"><i class="fa fa-home"></i>-->
+    <li class="level-one"><a href="order_detail.html"><i class="fa fa-home"></i></a>
+        <ul class="level-two">
+            <li>订单详情<li/>
+        </ul>
+    </li>
+
+    <li class="level-one"><a href="my_order.html"><i class="fa fa-beer"></i></a>
+        <ul class="level-two">
+            <li>我的预约<li/>
+        </ul>
+    </li>
+
+    <li class="level-one"><a href="change_info.html"><i class="fa fa-rocket"></i></a>
+        <ul class="level-two">
+            <li>修改资料<li/>
+        </ul>
+    </li>
+</div>
+
+<header id="head" class="secondary"></header>
+
+<!-- container -->
+<div class="container">
+
+    <ol class="breadcrumb">
+        <li><a href="map_order.html" style="font-size: 25px">返回地图</a></li>
+    </ol>
+
+    <div class="row">
+
+        <!-- Article main content -->
+        <article class="col-xs-12 maincontent">
+            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                <h2 class='thin text-center'>我的预约</h2>
+                <div class="panel panel-default" id="show_order">
+                    <!--<div class="panel-body">
+                        <h3 class="thin text-center">我的预约</h3>
+
+                        <li style='color: #080808;font-size: 25px' id="show_garage"></li>
+
+                        <table width="290" height="80" align="center">
+                            <tr>
+                                <td align="center" valign="middle">每小时</td>
+                                <td align="center" valign="middle">预约时间</td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="middle" id="1"></td>
+                                <td align="center" valign="middle" id="2"></td>
+                            </tr>
+                        </table>
+                                <div class="col-lg-4 text-right">
+                                    <button class="btn btn-action" type="submit" id="submit">取消预约</button>
+                                </div>
+
+                    </div>-->
+                </div>
+            </div>
+
+
+        </article>
+        <!-- /Article -->
+
+    </div>
+</div>	<!-- /container -->
+
+
+<footer id="footer" class="top-space">
+
+    <div class="footer1">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3 widget">
+                    <h3 class="widget-title">Contact</h3>
+                    <div class="widget-body">
+                        <p>+234 23 9873237<br>
+                            <a href="mailto:#">some.email@somewhere.com</a><br>
+                            <br>
+                            234 Hidden Pond Road, Ashland City, TN 37015
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 widget">
+                    <h3 class="widget-title">Follow me</h3>
+                    <div class="widget-body">
+                        <p class="follow-me-icons clearfix">
+                            <a href=""><i class="fa fa-twitter fa-2"></i></a>
+                            <a href=""><i class="fa fa-dribbble fa-2"></i></a>
+                            <a href=""><i class="fa fa-github fa-2"></i></a>
+                            <a href=""><i class="fa fa-facebook fa-2"></i></a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 widget">
+                    <h3 class="widget-title">Text widget</h3>
+                    <div class="widget-body">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, dolores, quibusdam architecto voluptatem amet fugiat nesciunt placeat provident cumque accusamus itaque voluptate modi quidem dolore optio velit hic iusto vero praesentium repellat commodi ad id expedita cupiditate repellendus possimus unde?</p>
+                        <p>Eius consequatur nihil quibusdam! Laborum, rerum, quis, inventore ipsa autem repellat provident assumenda labore soluta minima alias temporibus facere distinctio quas adipisci nam sunt explicabo officia tenetur at ea quos doloribus dolorum voluptate reprehenderit architecto sint libero illo et hic.</p>
+                    </div>
+                </div>
+
+            </div> <!-- /row of widgets -->
+        </div>
+    </div>
+
+    <div class="footer2">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-6 widget">
+                    <div class="widget-body">
+                        <p class="simplenav">
+                            <a href="#">Home</a> |
+                            <a href="about.html">About</a> |
+                            <a href="sidebar-right.html">Sidebar</a> |
+                            <a href="contact.html">Contact</a> |
+                            <b><a href="signup.html">Sign up</a></b>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 widget">
+                    <div class="widget-body">
+                        <p class="text-right">
+                            Copyright &copy; 2014, gettemplate. More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+                    </div>
+                </div>
+
+            </div> <!-- /row of widgets -->
+        </div>
+    </div>
+</footer>
+
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="assets/js/headroom.min.js"></script>
+<script src="assets/js/jQuery.headroom.min.js"></script>
+<script src="assets/js/template.js"></script>
+<script>
+    var $username=localStorage.getItem("username");
+    $("#username").html($username);
+    var datas = {
+        username: $username
+    };
+    $.ajax({
+            url: 'server/give_order_info.php',
+            type: 'post',
+//                    dataType: 'json',
+            data: datas,
+            success: function (data) {
+                data = data.replace(/<br>/g , ",");
+                data = data.slice(0,data.length-1);
+                data = '['+data+']';
+                console.log(data);
+                var order_info = JSON.parse(data);
+                console.log(order_info);
+                var html = "";
+                for(var i=0;i<order_info.length;i++) {
+                    html = html　+　"<div class='panel-body'>"+
+                        "<h3 class='thin text-center'>" + order_info[i]['address'] + "</h3>" +
+                        "<hr>"+
+                        "<table width='290' height='80' align='center' style='margin:auto'>" +
+                        "<tr>" +
+                        "<td align='center' valign='middle'>每小时</td>" +
+                        "<td align='center' valign='middle'>预约时间</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                        "<td align='center' valign='middle'>" + order_info[i]['price_per_hour'] + "</td>" +
+                        "<td align='center' valign='middle'>" + order_info[i]['start_time']+"</td>" +
+                        "<tr>" +
+                        "</table>" +
+                        "<div class='col-lg-4 text-right' style='float:right'>" +
+                        "<button class='btn btn-action' type='submit' id='"+ order_info[i]['order_id']+"'>取消预约</button>" +
+                        "</div>"+
+                        "</div>";
+                    $("#show_order").html(html);
+                }
+
+            },
+            error: function () {
+                alert('false');
+            }
+        })
+
+    $("#show_order").on('click', function (e) {
+        var ee =e.target;//取出来的元素对象
+        console.log(ee.tagName);
+        if(ee.tagName != "BUTTON")//判断是否是点击的按钮
+        {
+            return; //不是则返回
+        }
+        var $order_id = ee.id; //是则传给预约id
+        var datas1 = {
+            order_id: $order_id
+        };
+        $.ajax({
+            url: 'server/delete_order.php',
+            type: 'post',
+//                    dataType: 'json',
+            data: datas1,
+            success: function (data){
+                console.log(data);
+                var data1 = JSON.parse(data);
+                if (data1.status == 1) {
+                    location.reload();
+                }else{
+                    alert("取消预约失败");
+                }
+                },
+            error: function(){
+                alert('false');
+            }
+        })
+    })
+</script>
+</body>
+</html>

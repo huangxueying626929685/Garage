@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>预约车库</title>
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ByVwETBkWcRdkcG3VlSyLtSPE4GxpV3O">
+        //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
+    </script>
+    <!--<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>-->
+    <script src="./js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+</head>
+<body>
+<div id="allmap"></div>
+</body>
+
+</html>
+<script type="text/javascript">
+    // 百度地图API功能
+    //GPS坐标
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");//创建百度地图实例，这里的allmap是地图容器的id
+    var point = new BMap.Point(118.788,32.0574);//创建一个点对象，这里的参数是地图上的经纬度
+    map.centerAndZoom(point, 15);//这里是将地图的中心移动到我们刚才创建的点；这里的12是地图的缩放界别；数值越大，地图看的越细
+    map.enableScrollWheelZoom(true);
+    map.addControl(new BMap.NavigationControl());
+    map.addControl(new BMap.ScaleControl());
+    //定位,创建查询对象
+    var geolocation = new BMap.Geolocation();
+
+    geolocation.getCurrentPosition(function(result){
+        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+            /*var mk = new BMap.Marker(result.point);//创建一个覆盖物
+            map.addOverlay(mk);//增加一个标示到地图上*/
+            var current_lat  = result.point.lat;//获取到的经度
+            var current_lon = result.point.lng;//获取到的纬度
+            var gps_point = new BMap.Point(current_lon,current_lat);
+            BMap.Convertor.translate(gps_point, 0, initMap); //转换坐标
+
+//            alert('您的位置：'+current_lon+','+current_lat);
+           /* addMarker(result.point);*/
+        }
+    });
+
+    function initMap(point){
+//初始化地图
+        /*alert('您的位置：'+point.lng+','+point.lat);*/
+        console.log(point.lng);
+        map.panTo(point);
+        addMarker(point);
+    }
+
+    function addMarker(point){  // 创建图标对象
+        var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(20, 25));
+        // 创建标注对象并添加到地图
+        var marker = new BMap.Marker(point, {icon: myIcon});
+        map.addOverlay(marker);
+    }
+
+    var garage_info = [];
+    var data_info =[];
+    $.ajax({
+        url: 'server/give_garage_info.php',
+        type: 'post',
+     //   dataType: 'json',
+        success: function (data) {
+           console.log(data);
+//          var data1 = jQuery.parseJSON(data);
+//          var data1 = eval("("+ data +")");
+//          console.log(typeof(data1));
+//            alert(data);
+            data = data.replace(/<br>/g , ",");
+            data = data.slice(0,data.length-1)
+            data = '['+data+']';
+            garage_info = JSON.parse(data);
+            console.log(garage_info);
+            var n = garage_info.length;
+            if(n==0){
+                alert("无车库信息")
+            }
+            for(var i=0;i<garage_info.length;i++){
+                var latitude = garage_info[i]['latitude'];
+                var longtitude = garage_info[i]['longtitude'];
+                var address = garage_info[i]['address'];
+                data_info[i] = [];
+                data_info[i][0] = latitude;
+                data_info[i][1] = longtitude;
+                data_info[i][2] = address;
+            }
+            console.log(data_info);
+
+            var opts = {
+                width : 250,     // 信息窗口宽度
+                height: 80,     // 信息窗口高度
+                title : "信息窗口" , // 信息窗口标题
+                enableMessage:true//设置允许信息窗发送短息
+            };
+            for(var i=0;i<data_info.length;i++){
+                var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]));  // 创建标注
+                var content = data_info[i][2];
+                map.addOverlay(marker);               // 将标注添加到地图中
+                addClickHandler(content,marker);
+            }
+            function addClickHandler(content,marker){
+                marker.addEventListener("click",function(e){
+                    openInfo(content,e)}
+                );
+            }
+            function openInfo(content,e){
+                var p = e.target;
+                var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+                var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象
+                map.openInfoWindow(infoWindow,point); //开启信息窗口
+            }
+        },
+        error: function (e) {
+            console.log('false',e);
+        }
+    });
+</script>
+

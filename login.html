@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<!-- Head -->
+<head>
+	<title>聚力立停</title>
+	<!-- Meta-Tags -->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<!-- <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script> -->
+	<!-- //Meta-Tags -->
+	<!-- Style --> <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
+</head>
+<!-- //Head -->
+<!-- Body -->
+<body>
+	<h1>聚力立停</h1>
+	<div class="container w3layouts agileits">
+		<div id="login" class="login w3layouts agileits">
+			<h2>登 录</h2>				
+		<!-- <form action="101.132.185.117/garage_server/appconnect.php" method="post"> -->
+		 <!-- action="dologin.jsp" method="post" -->
+		<form id="form1" action="" method="post">
+				<input type="text" id="username" name="username" placeholder="用户名">
+				<input type="password" id="pass" name="pass" placeholder="密码">
+			<!--<ul class="tick w3layouts agileits">-->
+				<!--<li>-->
+					<!--<input type="checkbox" id="brand1" value="">-->
+					<!--<label for="brand1"><span></span>记住密码</label>-->
+					<!--<a href="#">忘记密码?</a>-->
+				<!--</li>-->
+			<!--</ul>-->
+		        <br>
+				<div class="send-button w3layouts agileits">
+				<input type="submit" id="submit" value="登 录">
+				</div>
+			</form>
+
+			<!--<div class="social-icons w3layouts agileits">-->
+				<!--<p>- 其他方式登录 -</p>-->
+				<!--<ul>-->
+					<!--<li class="qq"><a href="#">-->
+					<!--<span class="icons w3layouts agileits"></span>-->
+					<!--<span class="text w3layouts agileits">QQ</span></a></li>-->
+					<!--<li class="weixin w3ls"><a href="#">-->
+					<!--<span class="icons w3layouts"></span>-->
+					<!--<span class="text w3layouts agileits">微信</span></a></li>-->
+					<!--<li class="weibo aits"><a href="#">-->
+					<!--<span class="icons agileits"></span>-->
+					<!--<span class="text w3layouts agileits">微博</span></a></li>-->
+				<!--</ul>-->
+			<!--</div>-->
+			<div class="clear"></div>
+		</div>
+
+		<div class="register w3layouts agileits">
+			<h2>注 册</h2>
+			<form id="form2" action="" method="post">
+				<input type="text" id="get_username" name="phone_num" placeholder="手机号码">
+				<input type="password" id="get_pass" name="password" placeholder="密码">
+				<input type="text" id="get_car_num" name="car_num" placeholder="车牌号">
+				<input type="text" id="get_car_type" name="car_type" placeholder="车型">
+				<!--<input type="text" id="yanzhengma" name="yanzhengma" placeholder="验证码">-->
+				<!--<ul class="tick w3layouts agileits">-->
+						<!--<input type="submit" id="apply" value="获取验证码">-->
+				<!--</ul>-->
+			<div class="send-button w3layouts agileits">
+					<input type="submit" id="register" value="免费注册">
+			</div>
+			</form>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<script src="./js/jquery-1.9.1.min.js"></script>
+	<script>
+        $(function() {
+            $("#submit").on('click', function () {
+                var $username = $("#username").val();
+				var $pass = $("#pass").val();
+                if ($username == '' || $pass == '') {
+                    alert("用户名及密码不能为空");
+                    return false;
+                } else {
+                    var datas = {
+                        userid: $username,
+                        passwd: $pass
+                    };
+                    $.ajax({
+                        url: 'server/member_login.php',
+                        type: 'post',
+                        dataType: 'json',
+                        data: datas,
+                        success: function (json) {
+                            if (json.status == -1) {
+                                alert('用户名不存在');
+                            } else if (json.status == -2) {
+                                alert("密码错误");
+                            } else {
+                                window.location.href = 'http://101.132.185.117/garage_server/';//登录成功跳转
+                            }
+                        },
+                        error: function () {
+                            alert('false');
+                        }
+                    })
+                }
+                return false;
+            })
+            $("#register").click(function(){
+                var $username = $("#get_username").val(),
+                    $pass  = $("#get_pass").val(),
+                    $car_num  = $("#get_car_num").val(),
+                    $car_type  = $("#get_car_type").val();
+
+                if($username=='' || $pass=='' || $car_num=='' || $car_type==''){
+                    alert("所填项不能为空");
+                    return false;
+                }else{
+                    var datas={
+                        userid:$username,
+                        passwd:$pass,
+						car_num:$car_num,
+                        car_type:$car_type
+                    }
+                    $.ajax({
+                        url:'get_register_info.php.',
+                        type:'post',
+                        data:datas,
+                        dataType:'json',
+                        success:function(json){
+                            if(json.status==1){
+                                alert("注册成功");
+                                //注册成功后立即切换至登录表单,并记住用户名及密码;
+                                $("#username").val($username);
+                                $("#pass").val($pass);
+                            }
+                            else{
+                                alert('false');
+                            }
+                        }
+                    })
+                }return false;
+            })
+            })
+
+
+	</script>
+</body>
+<!-- //Body -->
+
+</html>

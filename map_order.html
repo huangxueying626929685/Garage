@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>预约车库</title>
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+        /*body, html {width: 100%;height:100%;margin:0;font-family:"微软雅黑";}
+        #allmap{height:800px;width:100%;}
+        #show_route,#show_route table{width:100%;}*/
+    </style>
+    <script src="./js/jquery-1.9.1.min.js"></script>
+
+    <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="./css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+
+    <link rel="shortcut icon" href="assets/images/gt_favicon.png">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style1.css" media="screen" type="text/css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen">
+    <!--//对话框-->
+    <!--<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>-->
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .modal-backdrop.fade.in {
+            opacity:0;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+<!--<ul id="nav-bar">-->
+<div style="position: absolute;z-index:10;left: 0;top:100px;width: 100px;background-color: rgba(0,0,0,.5);">
+    <!--<li class="level-one" id="selected"><i class="fa fa-home"></i>-->
+    <li class="level-one"><a href="order_detail.html"><i class="fa fa-home"></i></a>
+        <ul class="level-two" style="color:#000000">
+            <li >订单详情<li/>
+        </ul>
+    </li>
+
+    <li class="level-one"><a href="my_order.html"><i class="fa fa-beer"></i></a>
+        <ul class="level-two">
+            <li>我的预约<li/>
+        </ul>
+    </li>
+
+    <li class="level-one"><a href="change_info.html"><i class="fa fa-rocket"></i></a>
+        <ul class="level-two">
+            <li>修改资料<li/>
+        </ul>
+    </li>
+</div>
+
+<!--<div style="position: absolute;z-index:10;right:0;top:100px;width: 300px;height: 200px;background-color: rgba(233,238,242,1); display:none;"  id="show">-->
+<!--<div style="position: absolute;z-index:10;right:0;top:100px;width: 300px;height: 200px;background-color: rgba(233,238,242,1); display:none;"  id="show">-->
+<div class="panel panel-default" style="position: absolute; z-index: 10; right: 0px; top: 100px; width: 400px; display: none;" id="show">
+    <div class="panel-heading">
+
+        <h3 class="panel-title" style="font-size:25px;">
+            No
+            <a id="garage_id"></a>
+            :
+            <a id="show_garage"></a>
+        </h3>
+    </div>
+    <center>
+        <table class="table" align="center" style="font-size:15px;">
+            <!--<th>驾车</th>
+            <th>距离</th>-->
+            <tbody><tr><th>每小时</th>
+                <th>空余车位</th>
+            </tr><tr>
+                <!-- <td id="1"></td>
+                 <td id="2"></td>-->
+                <td id="3"></td>
+                <td id="4"></td>
+            </tr>
+            </tbody></table>
+    </center>
+    <div class="panel-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-id="111">
+            预约
+        </button>
+        <button type="button" class="btn btn-primary" id="navigation">
+            导航
+        </button>
+        <button type="button" class="btn btn-primary" id="reload">
+            返回
+        </button>
+    </div>
+</div>
+
+<div class="panel panel-default" style="position: absolute; z-index: 11; right: 0px; top: 300px; width: 400px; display: none;" id="show_route">
+
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel" style="font-size: 25px">
+                    提示
+                </h4>
+            </div>
+            <div class="modal-body" style="font-size: 16px">
+                超过预约时间即开始计费，若确定预约，请选择预约时间！
+                <form action="" class="form-horizontal"  role="form">
+                    <fieldset>
+                        <legend></legend>
+                        <div class="form-group">
+                            <label for="dtp_input2" class="col-md-2 control-label">预约日期</label>
+                            <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                <input class="form-control" size="16" type="text" value="" readonly>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" /><br/>
+                        </div>
+                        <div class="form-group">
+                            <label for="dtp_input3" class="col-md-2 control-label">预约时间</label>
+                            <div class="input-group date form_time col-md-5" data-date="" data-date-format="hh:ii" data-link-field="dtp_input3" data-link-format="hh:ii">
+                                <input class="form-control" size="16" type="text" value="" readonly>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                            </div>
+                            <input type="hidden" id="dtp_input3" value="" /><br/>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="order">
+                    确定预约
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<div class="navbar navbar-inverse navbar-fixed-top headroom">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+            <a class="navbar-brand" href="newindex.html">聚力立停</a>
+            <!--<a class="navbar-brand" href="newindex.html"><img src="assets/images/logo.png" alt="Progressus HTML5 template"></a>-->
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav pull-right">
+                <li><a href="newindex.html" style="font-size:20px">主页</a></li>
+                <li class="active"><a class="btn" id="username"></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<header id="head" class="secondary"></header>
+
+<div id="allmap">
+
+</div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ByVwETBkWcRdkcG3VlSyLtSPE4GxpV3O">
+    //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
+</script>
+<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+<!--<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+<script type="text/javascript" src="./jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="./js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+
+<script type="text/javascript">
+    $('.form_date').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+    $('.form_time').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 1,
+        minView: 0,
+        maxView: 1,
+        maxView: 1,
+        forceParse: 0
+    });
+    // 百度地图API功能
+    //GPS坐标
+    // 百度地图API功能
+    var $garage_num;
+    var $garage_point1;
+    var $current_point;
+    var $username = localStorage.getItem("username");
+    $("#username").html($username);
+
+    var map = new BMap.Map("allmap");//创建百度地图实例，这里的allmap是地图容器的id
+    var point = new BMap.Point(118.788,32.0574);//创建一个点对象，这里的参数是地图上的经纬度
+    map.centerAndZoom(point, 15);//这里是将地图的中心移动到我们刚才创建的点；这里的12是地图的缩放界别；数值越大，地图看的越细
+    map.enableScrollWheelZoom(true);
+    map.addControl(new BMap.NavigationControl());
+    map.addControl(new BMap.ScaleControl());
+    //定位,创建查询对象
+    var geolocation = new BMap.Geolocation();
+
+    geolocation.getCurrentPosition(function(result){
+        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+            var current_lat  = result.point.lat;//获取到的经度
+            var current_lon = result.point.lng;//获取到的纬度
+            var gps_point = new BMap.Point(current_lon,current_lat);
+            BMap.Convertor.translate(gps_point, 0, initMap); //转换坐标
+        }
+    });
+
+    function initMap(point){
+//初始化地图
+        /*alert('您的位置：'+point.lng+','+point.lat);*/
+        $current_point = point;
+//        alert($current_point);
+        map.panTo(point);
+        addMarker(point);
+
+    }
+
+    //    alert('您的位置：'+current_point.lng+','+current_point.lat);
+
+    function addMarker(point){  // 创建图标对象
+        var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(20, 25));
+        // 创建标注对象并添加到地图
+        var marker = new BMap.Marker(point, {icon: myIcon});
+        map.addOverlay(marker);
+    }
+
+    var garage_info = [];
+    $.ajax({
+        url: 'server/give_garage_info.php',
+        type: 'post',
+        //   dataType: 'json',
+        success: function (data) {
+            /*console.log(data);*/
+            data = data.replace(/<br>/g , ",");
+            data = data.slice(0,data.length-1);
+            data = '['+data+']';
+            garage_info = JSON.parse(data);
+            /*console.log(garage_info);*/
+            var n = garage_info.length;
+            if(n==0){
+                alert("无车库信息")
+            }
+            /* var opts = {
+                 width : 250,     // 信息窗口宽度
+                 height: 80,     // 信息窗口高度
+                 title : "信息窗口" , // 信息窗口标题
+                 enableMessage:true//设置允许信息窗发送短息
+             };*/
+            for(var i=0;i<garage_info.length;i++){
+                var garage_point = new BMap.Point(garage_info[i]['longtitude'],garage_info[i]['latitude']);
+                var marker = new BMap.Marker(garage_point);  // 创建标注
+                var id = garage_info[i]['id'];
+                var content = garage_info[i]['address'];
+                map.addOverlay(marker);               // 将标注添加到地图中
+                var price_per_hour = garage_info[i]['price_per_hour'];
+                var free_num = garage_info[i]['free_num'];
+                addClickHandler(id,content,marker,garage_point,price_per_hour,free_num);
+            }
+            /*           function addInfoWindow(content,point){
+                           var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象
+                           map.openInfoWindow(infoWindow,point); //开启信息窗口
+                       }*/
+            /*            function openInfo(content,e){
+                            var p = e.target;
+                            var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+                            var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象
+                            map.openInfoWindow(infoWindow,point); //开启信息窗口
+                        }*/
+        },
+        error: function (e) {
+            console.log('false',e);
+        }
+    });
+    function addClickHandler(id,content,marker,garage_point,price_per_hour,free_num){
+        marker.addEventListener("click",function() {
+            /*            var duration;
+                        var distance
+                        $("#show").css('display', 'block');
+                        var searchComplete = function(results) {
+                                if (transit.getStatus() != BMAP_STATUS_SUCCESS) {
+                                    return;
+                                }
+                                var plan = results.getPlan(0);
+                                duration = plan.getDuration(true);                //获取时间
+                                distance = plan.getDistance(true);             //获取距离
+                            }
+                        var transit = new BMap.DrivingRoute(map,{renderOptions: {map: map},
+                            onSearchComplete: searchComplete,
+                            onPolylinesSet: function(){
+
+                            }});
+                        transit.search($current_point,$garage_point1);*/     $("#show_route").css('display', 'none');
+
+            $("#show").css('display', 'block');
+            $("#garage_id").html(id);
+            $("#show_garage").html(content);
+            /*$("#1").html((map.getDistance(point,garage_point)/400).toFixed(2)+"分钟");
+            $("#2").html((map.getDistance(point,garage_point)/1000).toFixed(2)+"千米");*/
+            $("#3").html(price_per_hour + "元");
+            $("#4").html(free_num + "个");
+            $garage_num = id;
+            $garage_point1 = garage_point;
+            console.log($garage_num);
+        })
+    }
+
+    $("#order").on('click', function () {
+
+        var $username = localStorage.getItem("username");
+        var $order_time= $("#order_time").val();
+        var $order_date =$("#order_date").val();
+        var $start_time = $order_date + " " + $order_time;
+
+        console.log($username);
+        console.log($garage_num);
+        console.log($start_time);
+        /*            console.log($order_date);
+                    console.log($order_time);*/
+
+        if ($order_date == '' || $order_time == '') {
+            alert("预约日期时间不能为空");
+            return false;
+        } else {
+            var datas = {
+                userid: $username,
+                garage_num: $garage_num,
+                start_time:$start_time
+            };
+            $.ajax({
+                url: 'server/get_order_info.php',
+                type: 'post',
+//                dataType: 'json',
+                data: datas,
+                success: function (json) {
+                    if (json.status == -1) {
+                        alert('预约失败');
+                    } else {
+                        alert("您已成功预约该车库，可前往我的预约中查看");
+                        $('#myModal').modal('hide')
+
+                    }
+                },
+                error: function () {
+                    alert('false');
+                }
+            })
+        }
+        return false;
+    })
+
+    $("#navigation").on('click', function () {
+        $("#show_route").css('display', 'block');
+        console.log($garage_point1.lat);
+        console.log($garage_point1.lng);
+        /* var driving = new BMap.DrivingRoute(map,{
+             renderOptions:{
+                 map :map,
+                 panel : "results",
+                 autoViewport :true
+             }
+             });
+         driving.search($current_point,$garage_point1);*/
+        var driving = new BMap.DrivingRoute(map,
+            {renderOptions: {map: map, panel: "show_route"}});
+        driving.search($current_point,$garage_point1);
+//        driving.clearResults($current_point,$garage_point1);
+        /*   var options = {
+               onSearchComplete: function(results){
+                   if (driving.getStatus() == BMAP_STATUS_SUCCESS){
+                       // 获取第一条方案
+                       var plan = results.getPlan(0);
+                       // 获取方案的驾车线路
+                       var route = plan.getRoute(0);
+                       // 获取每个关键步骤,并输出到页面
+                       var s = [];
+                       for(var j = 0;j < plan.getNumRoutes(); j++){
+                           var route = plan.getRoute(j);
+                           for (var i = 0; i < route.getNumSteps(); i++){
+                               var step = route.getStep(i);
+                               s.push((i + 1) + ". " + step.getDescription());
+                           }
+                       }
+                       document.getElementById("show_route").innerHTML = s.join("<br/>");
+                   }
+               }
+           };
+           var driving = new BMap.DrivingRoute(map, options);
+           driving.search($current_point,$garage_point1);*/
+    })
+
+    $("#reload").on('click', function () {
+        location.reload();
+    })
+</script>

@@ -2,8 +2,8 @@
 <?php
 
 header("Content-Type:text/html;charset=utf8");
-//$get_id = $_POST['username'];
-$get_id = 18795968928;
+$get_id = $_POST['username'];
+//$get_id = 18795968928;
 mysql_select_db("garage",$mygarage);
 mysql_query("SET NAMES utf8",$mygarage);
 $sql_1 = mysql_query("SELECT * FROM parking_info where username = '$get_id' ");
@@ -17,7 +17,7 @@ if(!empty($result1)) {
     $date=floor((strtotime($leave_time)-strtotime($start_time))/86400);
     $hour=floor((strtotime($leave_time)-strtotime($start_time))/86400/3600);
     $minute=floor((strtotime($leave_time)-strtotime($start_time))/86400/60);
-    echo $date;
+//    echo $date;
     //取得单价
     $garage_num = $result1['garage_num'];
     $sql_2 = mysql_query("SELECT * FROM garage_info where id = $garage_num");
@@ -25,7 +25,7 @@ if(!empty($result1)) {
     $price_per_hour = $result2['price_per_hour'];
     //计算停车费用
 //    $money = ($minute/60) * $price_per_hour;
-    $money = 0.01;
+    $money = "0.01";
 
     //存入停车信息表
     if(!(mysql_query("update parking_info set leave_time = '$leave_time',money = '$money',pay_status = 0 where username = '$get_id'")))
@@ -39,6 +39,8 @@ if(!empty($result1)) {
     $back['start_time'] = $start_time;
     $back['leave_time'] = $leave_time;
     $back['money'] = $money;
+
+    //返回给app端
     echo json_encode($back, JSON_UNESCAPED_UNICODE );//不会自动把中文编码
 }else{
     $back['status']="-1";

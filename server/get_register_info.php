@@ -15,7 +15,8 @@ $get_car_num=$_POST['car_num'];//客户端post过来的车牌号码
 $get_car_type=$_POST['car_type'];//客户端post过来的车型
 $get_status=1;//客户端post过来的登录状态
 //mysql_query("INSERT INTO `member`.`member` (`username`, `password`, `car_num`, `car_type`, `tel`, `status`) VALUES ('1', '4', '1', '4', '1', '0')");
-if(mysql_query("INSERT INTO member(username, password, car_num, car_type, status) VALUES('$get_id','$get_pwd','$get_car_num','$get_car_type','$get_status')"))
+if(mysql_query("INSERT INTO member(username, password, car_num, car_type, status) 
+VALUES('$get_id','$get_pwd','$get_car_num','$get_car_type','$get_status')"))
 {
     $back['status']="1";
     echo(json_encode($back));

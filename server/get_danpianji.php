@@ -5,9 +5,10 @@ mysql_select_db("garage",$mygarage);
 mysql_query("SET NAMES utf8",$mygarage);
 //接收单片机数据
 //$json = $_GET['data'];
-//$json = '{"id":"1","car":"B8D3F16712","f_1":"0","fall":"1","all":"00101010110"}';
+$json = '{"id":"1","car":"B8D3F16712","f_1":"0","fall":"1","all":"00101010110"}';
 //$json = '{"id":"1","car":"D4C1CKC236","f_1":"0","fall":"1","all":"00101010110"}';
-$json = '{"id":"1","car":"CBD5E9E5F9","f_1":"011011","fall":"1","all":"00101010110"}';
+//$json = '{"id":"1","car":"CBD5E9E5F9","f_1":"011011","fall":"1","all":"00101010110"}';
+//$json = '{"id":"1","car":"0","f_1":"0","fall":"0","all":"00101010110"}';
 //$json = '{"id":"1","car":"0","f_1":"011010","fall":"0","all":"00101010110"}';
 //floor_1表示一层的车位状态信息，前三个数字表示限位开关状态，1表示一楼的车位，0表示高层车位
 //floor_1后三个数字表示是否有车状态，1表示有车，0表示没车
@@ -15,16 +16,16 @@ $json = '{"id":"1","car":"CBD5E9E5F9","f_1":"011011","fall":"1","all":"001010101
 
 //判断长度
 $len = strlen($json);
-echo ("单片机传来的json数据：".$json);
-echo '<br>';
+//echo ("单片机传来的json数据：".$json);
+//echo '<br>';
 //解析json数据
 $json1 = json_decode($json,true);
 
 //取出设备id
 $device_id = $json1['id'];
 
-
 /******************取出上一次分配的车位*******************/
+//查找parking_info表中confirm_parking为1的订单，判断确认停车的用户
 /*$sql5 = mysql_query("select * from parking_info
     where parking_id=(select max(parking_id) from parking_info)");
     $result5 = mysql_fetch_assoc($sql5);*/
@@ -36,9 +37,8 @@ $result5 = mysql_fetch_assoc($sql5);
 $parking_id = $result5['parking_id'];
 $pre_cp_num = $result5['cp_num'];
 $confirm_parking = $result5['confirm_parking'];//上一次是否完成停车
-
-echo ("上一次的确认停车标志：".$confirm_parking);
-echo '<br>';
+//echo ("上一次的确认停车标志：".$confirm_parking);
+//echo '<br>';
 /******************取出上一次分配的车位--END*******************/
 
 
@@ -48,7 +48,6 @@ $floor_1 = $json1['f_1'];
 //echo $floor_1;
 //如果收到的floor_1不等于0，且完成停车标志为1，判断上一次车停在了哪一个车位上
 if(($confirm_parking == "1")&&($floor_1 != "0")) {
-
     $confirm_parking = "0";
     echo ("更新确认停车标志：".$confirm_parking);
     echo '<br>';
@@ -78,26 +77,45 @@ if(($confirm_parking == "1")&&($floor_1 != "0")) {
 }
 /******************判断确认停车的用户的停车车位--END*******************/
 
-/******************确认取车离开的用户订单处理*******************/
-//确认取车则将车位数据表的车位状态置0，并删除该订单，存入历史订单信息表
-mysql_query("update no1_car_place set status = 0 where cp_num = $out_cp_num");
-mysql_query("delete from parking_info where cp_num = $out_cp_num");
 
+/******************确认取车离开的用户订单处理*******************/
+//查找是否有确认取车的订单，存入历史订单信息表，并在停车信息表中删除该订单，
+$sql8 = mysql_query("select * from parking_info where confirm_out = '1'");
+$result8 = mysql_fetch_assoc($sql8);
+if(!empty($result8)){
+    $username_1 = $result8['username'];
+    $car_num_1 = $result8['car_num'];
+    $garage_num_1 = $result8['garage_num'];
+    $cp_num_1 = $result8['cp_num'];
+    $start_time_1 = $result8['start_time'];
+    $leave_time_1 = $result8['leave_time'];
+    $money_1 = $result8['money'];
+//存入历史订单
+    mysql_query("insert into order_history(username,car_num,garage_num,cp_num,start_time,leave_time,money) 
+values('$username_1','$car_num_1','$garage_num_1','$cp_num_1','$start_time_1','$leave_time_1','$money_1')");
+//删除订单信息表中的订单
+    mysql_query("delete from parking_info where cp_num = $cp_num_1");
+
+//确认取车则将车位数据表的车位状态置0
+    mysql_query("update no1_car_place set status = 0 where cp_num = $cp_num_1");
+}
 /******************确认取车离开的用户订单处理--END*******************/
+
 
 /******************整体车位状态判断*******************/
 //总体车位状态判断
 $all_floor = $json1['all'];
+//echo $all_floor;
 /******************整体车位状态判断--END*******************/
 
 
 /******************判断是否有用户正在取车或存车*******************/
 //判断parking_info数据表中是否有正在停车的用户订单
-$sql6 = mysql_query("select * from parking_info where finish_parking = '0'");//从数据表order_info（手机端订单数据库）取车牌号
+$sql6 = mysql_query("select * from parking_info where finish_parking = '0'");
 $result6 = mysql_fetch_assoc($sql6);
 
-//判断parking_info数据表中是否有正在取车的用户订单
-$sql7 = mysql_query("select * from parking_info where pay_status = '1' and confirm_out = '-1'");//从数据表order_info（手机端订单数据库）取车牌号
+//判断parking_info数据表中是否有正在取车的用户订单 正在取车的confirm_out为 -1
+$sql7 = mysql_query("select * from parking_info where pay_status = '1' and confirm_out = '-1'");
 $result7 = mysql_fetch_assoc($sql7);
 /******************判断是否有用户正在取车或存车--END*******************/
 
@@ -105,17 +123,13 @@ $result7 = mysql_fetch_assoc($sql7);
 /******************存车流程*******************/
 //判断是否有车牌信息
 $car_num1 = $json1['car'];//取出单片机传来的车牌数据以待解析
-$in_cp_num = "0";
+//echo $car_num1;
 //有车牌信息
-if($car_num1 != "0") {
-    $car_num = resolve_car_num($car_num1);//解析车牌
-    echo ("车牌号：".$car_num);
-    echo '<br>';
-//存入单片机数据表
-mysql_query("update danpianji set device_id = '$device_id',car_num = '$car_num',
- floor_1 = $floor_1,all_floor = $all_floor,datas = '$json', len = '$len' where id = 1");
-
-
+$car_num = resolve_car_num($car_num1);//解析车牌
+//echo ("车牌号：".$car_num);
+//echo '<br>';
+$in_cp_num = "0";
+if($car_num != "0") {
     //搜索order_info数据表是否有该车牌号
     $sql = mysql_query("select * from order_info where car_num = '$car_num'");//从数据表order_info（手机端订单数据库）取车牌号
     $result = mysql_fetch_assoc($sql);
@@ -157,6 +171,15 @@ mysql_query("update danpianji set device_id = '$device_id',car_num = '$car_num',
 }
 /******************存车流程--END*******************/
 
+/******************存入单片机数据表*******************/
+//获取当前时间
+date_default_timezone_set('PRC'); //设置中国时区
+$time = date("Y-m-d H:i:s");
+//存入单片机数据表
+mysql_query("update danpianji set time1 = '$time',device_id = '$device_id',car_num = '$car_num',
+ floor_1 = $floor_1,all_floor = $all_floor,datas = '$json', len = '$len' where id = 1");
+
+/******************存入单片机数据表--END*******************/
 
 /******************取车流程*******************/
 //取出支付状态为1,且未开始取车的车位号
@@ -253,7 +276,7 @@ $back['device_id'] = $device_id;
 $back['cp_num'] = $give_cp_num;
 $back['error'] = $error;
 $back['get_floor_1'] = $get_floor_1;
-echo ("返回单片机数据：".json_encode($back));
+echo json_encode($back);
 /******************返回单片机数据--END*******************/
 
 mysql_close(); //关闭MySQL连接*/

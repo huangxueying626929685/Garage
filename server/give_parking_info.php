@@ -12,12 +12,8 @@ mysql_query("SET NAMES utf8",$mygarage);
 $sql_1 = mysql_query("SELECT * FROM parking_info where username = '$get_id' ");
 $result1 = mysql_fetch_assoc($sql_1);
 if(!empty($result1)){
-    if($result1['pay_status'] == 1){
+    if($result1['confirm_out'] == 1){
         $result['status'] = '-1';
-        $result['parking_id'] = '0';
-        $result['address'] = '0';
-        $result['price_per_hour'] = '0';
-        $result['start_time'] = '0';
     }else{
         $garage_num = $result1['garage_num'];
         $sql_2 = mysql_query("SELECT * FROM garage_info where id = $garage_num");
@@ -29,14 +25,11 @@ if(!empty($result1)){
         $result['price_per_hour'] = $result2['price_per_hour'];
         $result['finish_parking'] = $result1['finish_parking'];
         $result['start_time'] = $result1['start_time'];
+        $result['pay_status'] = $result1['pay_status'];
+        $result['confirm_out'] = $result1['confirm_out'];
     }
-
 }else{
     $result['status'] = '-1';
-    $result['parking_id'] = '0';
-    $result['address'] = '0';
-    $result['price_per_hour'] = '0';
-    $result['start_time'] = '0';
 }
 echo json_encode($result, JSON_UNESCAPED_UNICODE);
 ?>

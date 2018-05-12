@@ -10,10 +10,10 @@ $sql = mysql_query("SELECT * FROM member where username = $get_id ");
 
     $result1 = mysql_fetch_assoc($sql);
 
-    $result['car_type'] = $result1['car_type'];
-    $result['car_num'] = $result1['car_num'];
+    $back['car_type'] = $result1['car_type'];
+    $back['car_num'] = $result1['car_num'];
 
-    echo json_encode($result,JSON_UNESCAPED_UNICODE);//不会自动把中文编码
+    echo json_encode($back,JSON_UNESCAPED_UNICODE);//不会自动把中文编码
 
 
 ?>

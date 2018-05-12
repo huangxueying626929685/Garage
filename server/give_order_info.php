@@ -12,11 +12,11 @@
         $garage_num = $result1['garage_num'];
         $sql_2 = mysql_query("SELECT * FROM garage_info where id = $garage_num");
         $result2 = mysql_fetch_assoc($sql_2);
-        $result['order_id'] = $result1['order_id'];
-        $result['address'] = $result2['address'];
-        $result['price_per_hour'] = $result2['price_per_hour'];
-        $result['start_time'] = $result1['start_time'];
-        echo json_encode($result,JSON_UNESCAPED_UNICODE);//不会自动把中文编码
+        $back['order_id'] = $result1['order_id'];
+        $back['address'] = $result2['address'];
+        $back['price_per_hour'] = $result2['price_per_hour'];
+        $back['start_time'] = $result1['start_time'];
+        echo json_encode($back,JSON_UNESCAPED_UNICODE);//不会自动把中文编码
         echo '<br>';
     }
 ?>

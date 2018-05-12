@@ -19,17 +19,19 @@ if(!empty($result1)){
         $sql_2 = mysql_query("SELECT * FROM garage_info where id = $garage_num");
         $result2 = mysql_fetch_assoc($sql_2);
 
-        $result['status'] = '1';
-        $result['parking_id'] = $result1['parking_id'];
-        $result['address'] = $result2['address'];
-        $result['price_per_hour'] = $result2['price_per_hour'];
-        $result['finish_parking'] = $result1['finish_parking'];
-        $result['start_time'] = $result1['start_time'];
-        $result['pay_status'] = $result1['pay_status'];
-        $result['confirm_out'] = $result1['confirm_out'];
+        $back['status'] = '1';
+        $back['parking_id'] = $result1['parking_id'];
+        $back['address'] = $result2['address'];
+        $back['price_per_hour'] = $result2['price_per_hour'];
+        $back['finish_parking'] = $result1['finish_parking'];
+        $back['start_time'] = $result1['start_time'];
+        $back['leave_time'] = $result1['leave_time'];
+        $back['money'] = $result1['money'];
+        $back['pay_status'] = $result1['pay_status'];
+        $back['confirm_out'] = $result1['confirm_out'];
     }
 }else{
-    $result['status'] = '-1';
+    $back['status'] = '-1';
 }
-echo json_encode($result, JSON_UNESCAPED_UNICODE);
+echo json_encode($back, JSON_UNESCAPED_UNICODE);
 ?>

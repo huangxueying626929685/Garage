@@ -11,12 +11,6 @@ $get_num = $_POST['number'];
 $sql = mysql_query("SELECT * FROM member WHERE username='$get_id'");
 $found_id = mysql_fetch_assoc($sql);
 
-/*$get_id = 18959204245;//客户端post过来的手机号
-$get_type = "中文";
-$get_num = 542543245;*/
-$sql = mysql_query("SELECT * FROM member WHERE username= '$get_id'");
-
-$found_id = mysql_fetch_assoc($sql);
 if(!empty($found_id)) {
 //  echo($found_tel);
     if(mysql_query("UPDATE member SET car_type= '$get_type',car_num='$get_num'WHERE username = '$get_id'")){

@@ -4,11 +4,11 @@ header("Content-Type:text/html;charset=utf8");
 mysql_select_db("garage",$mygarage);
 mysql_query("SET NAMES utf8",$mygarage);
 //接收单片机数据
-$json = $_GET['data'];
+//$json = $_GET['data'];
 //$json = '{"id":"1","car":"B8D3F16712","f_1":"0","fall":"1","all":"00101010110"}';
 //$json = '{"id":"1","car":"D4C1CKC236","f_1":"0","fall":"1","all":"00101010110"}';
 //$json = '{"id":"1","car":"CBD5E9E5F9","f_1":"011011","fall":"1","all":"00101010110"}';
-//$json = '{"id":"1","car":"D4A5FSQ818","f_1":"0","fall":"0","all":"00101010110"}';
+$json = '{"id":"1","car":"D4A5FSQ818","f_1":"0","fall":"0","all":"00101010110"}';
 //$json = '{"id":"1","car":"0","f_1":"011010","fall":"0","all":"00101010110"}';
 //floor_1表示一层的车位状态信息，前三个数字表示限位开关状态，1表示一楼的车位，0表示高层车位
 //floor_1后三个数字表示是否有车状态，1表示有车，0表示没车
@@ -126,8 +126,8 @@ $car_num1 = $json1['car'];//取出单片机传来的车牌数据以待解析
 //echo $car_num1;
 //有车牌信息
 $car_num = resolve_car_num($car_num1);//解析车牌
-//echo ("车牌号：".$car_num);
-//echo '<br>';
+echo ("车牌号：".$car_num);
+echo '<br>';
 $in_cp_num = "0";
 if($car_num != "0") {
     //搜索order_info数据表是否有该车牌号

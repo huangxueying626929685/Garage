@@ -31,9 +31,7 @@ if(!empty($result1)) {
     date_default_timezone_set('PRC'); //设置中国时区
     $leave_time = date("Y-m-d H:i");
     //计算停车时间
-    $date = floor((strtotime($leave_time)-strtotime($start_time))/86400);
-    $hour = floor((strtotime($leave_time)-strtotime($start_time))/86400/3600);
-    $minute = floor((strtotime($leave_time)-strtotime($start_time))/86400/60);
+    $minute = floor((strtotime($leave_time)-strtotime($start_time))%86400/60);
 //    echo $date;
 
     //计算正常停车费用

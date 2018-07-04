@@ -3,10 +3,10 @@
 mysql_select_db("garage",$mygarage);
 
 $get_id = $_POST['order_id'];//客户端post过来的预约单号
-//$get_id = 188;
+//$get_id = 250;
 //$get_id = 1;
 
-$sql = mysql_query("SELECT * FROM order_info WHERE order_id=$get_id");
+$sql = mysql_query("SELECT * FROM order_info WHERE order_id = $get_id");
 $result = mysql_fetch_assoc($sql);
 if(!empty($result))
 {
@@ -29,15 +29,23 @@ if(!empty($result))
     $cancel_time = date("Y-m-d H:i");
 
     //判断是否超过15分钟
-    $minute = floor((strtotime($cancel_time)-strtotime($action_time))/86400/60);
+    $minute = floor((strtotime($cancel_time)-strtotime($action_time))%86400/60);
+//    echo $action_time;
+//    echo '<br>';
+//    echo $cancel_time;
+//    echo '<br>';
+//    echo $minute;
+//    echo '<br>';
+
     if($minute > 15) {
         //取消预约，计算费用用户在15分钟内取消不计费，超过15分钟的部分计费
-        $money = ($price_per_hour) * (($minute-15)/60);
+        //$money = ($price_per_hour) * (($minute-15)/60);
+        $money = "0.01";
         //存入late_order数据表
         mysql_query("insert into late_order(username,car_num,action_time,cancel_time,order_time,money)
         values('$username','$car_num','$action_time','$cancel_time','$order_time','$money') ");
     }else{
-        $money = 0;
+        $money = "0";
     }
 
     //删除预约信息
@@ -54,11 +62,13 @@ if(!empty($result))
     $status = "1";
 }
 else{
-    $money = 0;
+    $money = "0";
     $status = "-1";
+    $username = "0";
 }
 
 $back['status'] = $status;
+$back['username'] = $username;
 $back['money'] = $money;
 echo(json_encode($back));
 

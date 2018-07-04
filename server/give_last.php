@@ -24,9 +24,6 @@ if(!empty($result1)) {
     $order_minute = floor((strtotime($start_time)-strtotime($action_time))/86400/60);
     //求预约过程的费用
     $extra_cost = ($order_minute/60) * ($price_per_hour/2);
-
-
-
     //获取当前时间作为结束时间
     date_default_timezone_set('PRC'); //设置中国时区
     $leave_time = date("Y-m-d H:i");
@@ -37,7 +34,7 @@ if(!empty($result1)) {
     //计算正常停车费用
     //$parking_money = ($minute/60) * $price_per_hour;
     //总费用 = 预约期间费用 + 停车费用
-    //$money = $parking_money + $extra_cost;
+    //$money = number_format($parking_money + $extra_cost,2);
 
     $money = "0.01";
 
@@ -55,10 +52,15 @@ if(!empty($result1)) {
     $back['money'] = $money;
 
     //返回给app端
-    echo json_encode($back, JSON_UNESCAPED_UNICODE );//不会自动把中文编码
+
 }else{
     $back['status']="-1";
-    echo json_encode($back, JSON_UNESCAPED_UNICODE );//不会自动把中文编码
+    $back['parking_id'] = "0";
+    $back['address'] = "0";
+    $back['price_per_hour'] = "0";
+    $back['start_time'] = "0";
+    $back['leave_time'] = "0";
+    $back['money'] = "0";
 }
-
+echo json_encode($back, JSON_UNESCAPED_UNICODE );//不会自动把中文编码
 ?>

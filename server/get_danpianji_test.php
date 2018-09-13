@@ -6,10 +6,10 @@ mysql_query("SET NAMES utf8", $mygarage);
 
 /******************接收解析单片机发来的数据*******************/
 //接收单片机数据
-$json = $_GET['data'];
+//$json = $_GET['data'];
 //$json = '{"id":"1","car":"B8D3F16712","free_num":"7","f_1":"011011","fall":"1","all":"00101010110"}';
 //$json = '{"id":"1","car":"D4C1CKC236","free_num":"1","f_1":"0","fall":"1","all":"00101010110"}';
-//$json = '{"id":"1","car":"CBD5E9E5F9","free_num":"1","f_1":"011011","fall":"1","all":"00101010110"}';
+$json = '{"id":"1","car":"CBD5E9E5F9","free_num":"1","f_1":"011011","fall":"1","all":"00101010110"}';
 //$json = '{"id":"1","car":"D4A5FSQ818","free_num":"1","f_1":"0","fall":"0","all":"00101010110"}';
 //$json = '{"id":"1","car":"BEA9NH1N10","free_num":"1","f_1":"011010","fall":"0","all":"00101010110"}';
 //$json = '{"id":"1","car":"0","free_num":"1","f_1":"011010","fall":"0","all":"00101010110 "}';
@@ -208,7 +208,6 @@ function deal_with_out_order($garage_id)
     $sql8 = mysql_query("select * from parking_info where confirm_out = '1'");
     $result8 = mysql_fetch_assoc($sql8);
     if (!empty($result8)) {
-        $parking_id_1 = $result8['parking_id'];
         $username_1 = $result8['username'];
         $car_num_1 = $result8['car_num'];
         $garage_num_1 = $result8['garage_num'];
@@ -217,8 +216,8 @@ function deal_with_out_order($garage_id)
         $leave_time_1 = $result8['leave_time'];
         $money_1 = $result8['money'];
 //存入历史订单
-        mysql_query("insert into parking_history(parking_id,username,car_num,garage_num,cp_num,start_time,leave_time,money) 
-values('$parking_id_1','$username_1','$car_num_1','$garage_num_1','$cp_num_1','$start_time_1','$leave_time_1','$money_1')");
+        mysql_query("insert into parking_history(username,car_num,garage_num,cp_num,start_time,leave_time,money) 
+values('$username_1','$car_num_1','$garage_num_1','$cp_num_1','$start_time_1','$leave_time_1','$money_1')");
 //删除订单信息表中的订单
         mysql_query("delete from parking_info where cp_num = $cp_num_1");
 

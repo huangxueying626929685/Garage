@@ -62,8 +62,10 @@ if (!empty($result)&&(empty($result3))&&(!empty($get_id))) {
         $address = $result1['address'];
         mysql_query("delete from order_info where username = '$username'");
 
-        mysql_query("insert into late_order(username,address,car_num,action_time,order_time,money)
-    values('$username','$address','$car_num','$action_time','$order_time','$money') ");
+        if(!mysql_query("insert into late_order(username,car_num,action_time,order_time,money)
+    values('$username','$car_num','$action_time','$order_time','$money') ")){
+            die(mysql_error());
+        }
 
         //对应车库空闲车位加1
         $free_num1 = $result1['free_num'];

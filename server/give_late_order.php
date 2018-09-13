@@ -8,7 +8,7 @@
  */
 header("Content-Type:text/html;charset=utf8");
 $get_id = $_POST['username'];
-//$get_id = 18959204245;
+//$get_id = 18036134694;
 mysql_select_db("garage",$mygarage);
 mysql_query("SET NAMES utf8",$mygarage);
 $sql_1 = mysql_query("SELECT * FROM late_order where username = '$get_id' ");
@@ -16,7 +16,6 @@ $result1 = mysql_fetch_assoc($sql_1);
 if(!empty($result1)) {
     $back['id'] = $result1['id'];
     $back['car_num'] = $result1['car_num'];
-    $back['address'] = $result1['address'];
     $back['action_time'] = $result1['action_time'];
     $back['cancel_time'] = $result1['cancel_time'];
     $back['order_time'] = $result1['order_time'];

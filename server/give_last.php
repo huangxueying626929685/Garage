@@ -21,7 +21,12 @@ if(!empty($result1)) {
     //用户预约时间
     $order_time = $result1['order_time'];
     //求用户从操作预约到进入车库的这段时间
-    $order_minute = floor((strtotime($start_time)-strtotime($action_time))/86400/60);
+    //超过15分钟的预约时间需计费
+    if((strtotime($start_time)-strtotime($action_time))/86400/60 > 15){
+        $order_minute = floor((strtotime($start_time)-strtotime($action_time))/86400/60) - 15;
+    }else{
+        $order_minute = 0;
+    }
     //求预约过程的费用
     $extra_cost = ($order_minute/60) * ($price_per_hour/2);
     //获取当前时间作为结束时间

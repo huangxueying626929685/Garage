@@ -3,7 +3,7 @@
 
     header("Content-Type:text/html;charset=utf8");
     $get_id = $_POST['username'];
-//    $get_id = 18959204245;
+    //$get_id = 18959204245;
     mysql_select_db("garage",$mygarage);
     mysql_query("SET NAMES utf8",$mygarage);
     $sql_1 = mysql_query("SELECT * FROM order_info where username = '$get_id' ");

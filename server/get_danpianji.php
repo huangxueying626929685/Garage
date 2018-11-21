@@ -7,12 +7,12 @@ mysql_query("SET NAMES utf8", $mygarage);
 /******************接收解析单片机发来的数据*******************/
 //接收单片机数据
 $json = $_GET['data'];
-//$json = '{"id":"1","car":"B8D3F16712","free_num":"7","f_1":"011011","fall":"1","all":"00101010110"}';
-//$json = '{"id":"1","car":"D4C1CKC236","free_num":"1","f_1":"0","fall":"1","all":"00101010110"}';
-//$json = '{"id":"1","car":"CBD5E9E5F9","free_num":"1","f_1":"011011","fall":"1","all":"00101010110"}';
-//$json = '{"id":"1","car":"D4A5FSQ818","free_num":"1","f_1":"0","fall":"0","all":"00101010110"}';
-//$json = '{"id":"1","car":"BEA9NH1N10","free_num":"1","f_1":"011010","fall":"0","all":"00101010110"}';
-//$json = '{"id":"1","car":"0","free_num":"1","f_1":"011010","fall":"0","all":"00101010110 "}';
+//$json = '{"id":"1","car":"B8D3F16712","free_num":"7","f_1":"011011","all":"00101010110","fault":"111111","out":"D4C1CKC236"}';
+//$json = '{"id":"1","car":"D4C1CKC236","free_num":"1","f_1":"0","all":"00101010110"}';
+//$json = '{"id":"1","car":"CBD5E9E5F9","free_num":"1","f_1":"011011","all":"00101010110"}';
+//$json = '{"id":"1","car":"D4A5FSQ818","free_num":"1","f_1":"0","all":"00101010110"}';
+//$json = '{"id":"1","car":"BEA9NH1N10","free_num":"1","f_1":"011010","all":"00101010110"}';
+//$json = '{"id":"1","car":"0","free_num":"1","f_1":"011010","all":"00101010110 "}';
 //floor_1表示一层的车位状态信息，前三个数字表示限位开关状态，1表示一楼的车位，0表示高层车位
 //floor_1后三个数字表示是否有车状态，1表示有车，0表示没车
 //all_floor表示除一层之外的所有车位状态信息
@@ -36,6 +36,22 @@ $if_late = "0";
 $if_order = "0";
 $if_out = "0";
 $give_money = 0;
+
+//存入故障报警标志位
+if(isset($json1['fault'])){
+    $status = $json1['fault'];
+    store_fault($status,$device_id);
+//$status = 1010110;
+}
+
+//判断车是否离开
+if(isset($json1['out'])){
+    //判断是否有车牌信息
+    $out_car_num1 = $json1['out'];//取出单片机传来的车牌数据以待解析
+    $out_car_num = resolve_car_num($out_car_num1);//解析车牌
+    confirm_out($out_car_num,$device_id);
+}
+
 /******************END*******************/
 
 /******************取出已停好车用户的分配车位*******************/
@@ -110,6 +126,30 @@ mysql_query("update back_danpianji set now_time = '$now_time',back = '$back1' wh
 /******************END*******************/
 
 mysql_close(); //关闭MySQL连接*/
+
+//存入故障报警标志函数
+function store_fault($status,$device_id)
+{
+    for($i = 0;$i < 6;$i ++){
+        $a[$i] = substr($status,$i,1);
+    }
+    mysql_query("update fault_warning set ji_ting = '$a[0]',guang_dian = '$a[1]',re_ji_guo_zai = '$a[2]',
+fang_song_lian = '$a[3]',ji_xian = '$a[4]',gua_gou = '$a[5]' where id = '$device_id'");
+}
+
+//离开车牌确认函数
+function confirm_out($out_car_num,$device_id)
+{
+    $sql = mysql_query("SELECT * FROM parking_info WHERE car_num = '$out_car_num' and garage_num = '$device_id'");
+    $found = mysql_fetch_assoc($sql);
+    if (!empty($found)) {
+        $temp = "1";
+//    mysql_query("DELETE FROM parking_info  WHERE username = $get_username");
+        if (!(mysql_query("update parking_info set confirm_out = '$temp' where car_num = '$out_car_num' and garage_num = '$device_id'"))) {
+            die(mysql_error());
+        }
+    }
+}
 
 //判断确认停车的用户真实停车车位函数
 function get_true_cp_num($pre_cp_num, $confirm_parking, $floor_1, $parking_id, $floor_1_id, $garage_id)

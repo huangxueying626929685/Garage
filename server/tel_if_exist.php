@@ -3,7 +3,7 @@
 mysql_select_db("garage",$mygarage);
 
 $get_phone = $_POST['PhoneNumber'];//客户端post过来的手机号
-//$get_phone = 18795968928;//客户端post过来的手机号
+//$get_phone = 18959204245;//客户端post过来的手机号
 $sql = mysql_query("SELECT username FROM member WHERE username=$get_phone");
 $found_tel = mysql_num_rows($sql);
 

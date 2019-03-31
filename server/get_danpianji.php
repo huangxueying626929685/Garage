@@ -11,7 +11,7 @@ $json = $_GET['data'];
 //$json = '{"id":"1","car":"D4C1CKC236","free_num":"1","f_1":"0","all":"00101010110"}';
 //$json = '{"id":"1","car":"CBD5E9E5F9","free_num":"1","f_1":"011011","all":"00101010110"}';
 //$json = '{"id":"1","car":"D4A5FSQ818","free_num":"1","f_1":"0","all":"00101010110"}';
-//$json = '{"id":"1","car":"BEA9NH1N10","free_num":"1","f_1":"011010","all":"00101010110"}';
+//$json = '{"id":"1","car":"BEA9A88888","free_num":"1","f_1":"011010","all":"00101010110"}';
 //$json = '{"id":"1","car":"0","free_num":"1","f_1":"011010","all":"00101010110 "}';
 //floor_1表示一层的车位状态信息，前三个数字表示限位开关状态，1表示一楼的车位，0表示高层车位
 //floor_1后三个数字表示是否有车状态，1表示有车，0表示没车
@@ -553,6 +553,7 @@ function back_to_danpianji($confirm_parking, $in_cp_num, $out_cp_num, $device_id
     }
     $back['device_id'] = $device_id;
     $back['cp_num'] = $give_cp_num;
+    //$back['cp_num'] = "301";
     $back['error'] = $error;
     $back['get_floor_1'] = $get_floor_1;
     $back['led'] = $led;

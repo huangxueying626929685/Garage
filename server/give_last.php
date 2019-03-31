@@ -41,8 +41,8 @@ if(!empty($result1)) {
     //总费用 = 预约期间费用 + 停车费用
     //$money = number_format($parking_money + $extra_cost,2);
 
-    $money = "1.00";
-
+    //$money = "1.00";
+    $money = "0.01";
     //存入停车信息表
     if(!(mysql_query("update parking_info set leave_time = '$leave_time',money = '$money',pay_status = 0 where username = '$get_id'")))
     {
